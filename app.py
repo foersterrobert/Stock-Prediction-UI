@@ -23,15 +23,17 @@ style.use("bmh")
 class App:
     def __init__(self, root):
         self.now = str(datetime.now().strftime('%Y-%m-%d'))
-
+        f = open("save.txt", "r")
+        f1 = f.read().split('\n')
+        f.close()
         self.root = root
-        self.root.title("Stock Programm")
+        self.root.title("Stock-Pred-Program")
         # self.root.geometry("600x450")
         self.root.resizable(False, False)
 
-        self.GRAPHVAR = tkinter.IntVar(value=1)
-        self.SHORTVAR = tkinter.IntVar()
-        self.LONGVAR = tkinter.IntVar()
+        self.GRAPHVAR = tkinter.IntVar(value=int(f1[4]))
+        self.SHORTVAR = tkinter.IntVar(value=int(f1[5]))
+        self.LONGVAR = tkinter.IntVar(value=int(f1[6]))
 
         self.UILF = tkinter.LabelFrame(root, bd=0)
         self.UILF.grid(row=0, column=0, padx=35, pady=10)
@@ -40,19 +42,21 @@ class App:
         self.UISTOCK.grid(row=0, column=0, sticky="W")
 
         self.UISTOCKE = tkinter.Entry(self.UILF)
+        self.UISTOCKE.insert(0, f1[0])
         self.UISTOCKE.grid(row=0, column=1, sticky="W")
 
         self.UISDATE = tkinter.Label(self.UILF, text="Startdate: ")
         self.UISDATE.grid(row=1, column=0, sticky="W")
 
         self.UISDATEE = tkinter.Entry(self.UILF)
+        self.UISDATEE.insert(0, f1[1])
         self.UISDATEE.grid(row=1, column=1, sticky="W")
 
         self.UIEDATE = tkinter.Label(self.UILF, text="Enddate: ")
         self.UIEDATE.grid(row=2, column=0, sticky="W")
 
         self.UIEDATEE = tkinter.Entry(self.UILF)
-        self.UIEDATEE.insert(0, self.now)
+        self.UIEDATEE.insert(0, f1[2])
         self.UIEDATEE.grid(row=2, column=1, sticky="W")
 
         self.UIGRAPHC = tkinter.Checkbutton(self.UILF, text="Graph", variable=self.GRAPHVAR)
@@ -68,6 +72,7 @@ class App:
         self.UIPRED.grid(row=6, column=0, sticky="W")
 
         self.UIPREDS = tkinter.Scale(self.UILF, from_=0, to=3, orient='horizontal')
+        self.UIPREDS.set(f1[6])
         self.UIPREDS.grid(row=6, column=1, sticky='W')
 
         self.BTLF = tkinter.LabelFrame(self.UILF, bd=0)
@@ -160,4 +165,6 @@ class App:
 
 
     def save(self):
-        pass
+        f = open('save.txt', 'w+')
+        f.write(self.UISTOCKE.get() + '\n' + self.UISDATEE.get() + '\n' + self.UIEDATEE.get() + '\n' + str(self.GRAPHVAR.get()) + '\n' + str(self.SHORTVAR.get()) + '\n' + str(self.LONGVAR.get()) + '\n' + str(self.UIPREDS.get()))
+        f.close()
